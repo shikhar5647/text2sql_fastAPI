@@ -1,0 +1,14 @@
+# /requirements.txt
+fastapi
+uvicorn[standard]
+langgraph
+langchain
+langchain-google-genai
+google-generativeai
+python-dotenv
+pandas
+sqlparse
+typing-extensions
+pydantic
+openpyxl
+pymssql
