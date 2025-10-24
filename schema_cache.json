@@ -1,0 +1,99 @@
+{
+  "timestamp": 4102444800,
+  "tables": {
+    "client": {
+      "columns": [
+        { "column_name": "id", "data_type": "INT", "is_nullable": "NO" },
+        { "column_name": "name", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "slug", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "email", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "phone", "data_type": "NVARCHAR(50)", "is_nullable": "YES" },
+        { "column_name": "address1", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "address2", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "city", "data_type": "NVARCHAR(100)", "is_nullable": "YES" },
+        { "column_name": "state", "data_type": "NVARCHAR(100)", "is_nullable": "YES" },
+        { "column_name": "country", "data_type": "NVARCHAR(100)", "is_nullable": "YES" },
+        { "column_name": "zipcode", "data_type": "NVARCHAR(20)", "is_nullable": "YES" },
+        { "column_name": "created_at", "data_type": "DATETIME2", "is_nullable": "YES" },
+        { "column_name": "updated_at", "data_type": "DATETIME2", "is_nullable": "YES" },
+        { "column_name": "team_id", "data_type": "INT", "is_nullable": "YES" },
+        { "column_name": "channel_id", "data_type": "INT", "is_nullable": "YES" },
+        { "column_name": "drive_id", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "delta_token", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "drive_item_id", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "hubspot_id", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "owner_name", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "status", "data_type": "NVARCHAR(50)", "is_nullable": "YES" },
+        { "column_name": "industry", "data_type": "NVARCHAR(100)", "is_nullable": "YES" },
+        { "column_name": "type", "data_type": "NVARCHAR(50)", "is_nullable": "YES" },
+        { "column_name": "no_employees", "data_type": "INT", "is_nullable": "YES" },
+        { "column_name": "description", "data_type": "NVARCHAR(MAX)", "is_nullable": "YES" },
+        { "column_name": "timezone", "data_type": "NVARCHAR(100)", "is_nullable": "YES" },
+        { "column_name": "created_by", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "client_number", "data_type": "NVARCHAR(100)", "is_nullable": "YES" }
+      ],
+      "column_names": [
+        "id","name","slug","email","phone","address1","address2","city","state","country","zipcode","created_at","updated_at","team_id","channel_id","drive_id","delta_token","drive_item_id","hubspot_id","owner_name","status","industry","type","no_employees","description","timezone","created_by","client_number"
+      ]
+    },
+    "contacts": {
+      "columns": [
+        { "column_name": "id", "data_type": "INT", "is_nullable": "NO" },
+        { "column_name": "first_name", "data_type": "NVARCHAR(100)", "is_nullable": "YES" },
+        { "column_name": "last_name", "data_type": "NVARCHAR(100)", "is_nullable": "YES" },
+        { "column_name": "email", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "owner", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "phone", "data_type": "NVARCHAR(50)", "is_nullable": "YES" },
+        { "column_name": "mobile", "data_type": "NVARCHAR(50)", "is_nullable": "YES" },
+        { "column_name": "stage", "data_type": "NVARCHAR(50)", "is_nullable": "YES" },
+        { "column_name": "client_id", "data_type": "INT", "is_nullable": "YES" },
+        { "column_name": "client_name", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "hubspot_id", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "created_at", "data_type": "DATETIME2", "is_nullable": "YES" },
+        { "column_name": "updated_at", "data_type": "DATETIME2", "is_nullable": "YES" }
+      ],
+      "column_names": [
+        "id","first_name","last_name","email","owner","phone","mobile","stage","client_id","client_name","hubspot_id","created_at","updated_at"
+      ]
+    },
+    "project": {
+      "columns": [
+        { "column_name": "id", "data_type": "INT", "is_nullable": "NO" },
+        { "column_name": "name", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "client_id", "data_type": "INT", "is_nullable": "YES" },
+        { "column_name": "description", "data_type": "NVARCHAR(MAX)", "is_nullable": "YES" },
+        { "column_name": "slug", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "category", "data_type": "NVARCHAR(100)", "is_nullable": "YES" },
+        { "column_name": "status", "data_type": "NVARCHAR(50)", "is_nullable": "YES" },
+        { "column_name": "priority", "data_type": "NVARCHAR(50)", "is_nullable": "YES" },
+        { "column_name": "start_date", "data_type": "DATE", "is_nullable": "YES" },
+        { "column_name": "end_date", "data_type": "DATE", "is_nullable": "YES" },
+        { "column_name": "currency", "data_type": "NVARCHAR(10)", "is_nullable": "YES" },
+        { "column_name": "budget", "data_type": "DECIMAL(18,2)", "is_nullable": "YES" },
+        { "column_name": "created_by", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "updated_by", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "created_at", "data_type": "DATETIME2", "is_nullable": "YES" },
+        { "column_name": "updated_at", "data_type": "DATETIME2", "is_nullable": "YES" },
+        { "column_name": "billing_type", "data_type": "NVARCHAR(50)", "is_nullable": "YES" },
+        { "column_name": "amount_billed", "data_type": "DECIMAL(18,2)", "is_nullable": "YES" },
+        { "column_name": "budget_hours", "data_type": "DECIMAL(18,2)", "is_nullable": "YES" },
+        { "column_name": "team_id", "data_type": "INT", "is_nullable": "YES" },
+        { "column_name": "channel_id", "data_type": "INT", "is_nullable": "YES" },
+        { "column_name": "drive_id", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "drive_subscription_id", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "delta_token", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "drive_item_id", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "hubspot_id", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "xero_id", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "owner_id", "data_type": "INT", "is_nullable": "YES" },
+        { "column_name": "owner_email", "data_type": "NVARCHAR(255)", "is_nullable": "YES" },
+        { "column_name": "last_modified_date", "data_type": "DATE", "is_nullable": "YES" },
+        { "column_name": "project_number", "data_type": "NVARCHAR(100)", "is_nullable": "YES" }
+      ],
+      "column_names": [
+        "id","name","client_id","description","slug","category","status","priority","start_date","end_date","currency","budget","created_by","updated_by","created_at","updated_at","billing_type","amount_billed","budget_hours","team_id","channel_id","drive_id","drive_subscription_id","delta_token","drive_item_id","hubspot_id","xero_id","owner_id","owner_email","last_modified_date","project_number"
+      ]
+    }
+  }
+}
+
