@@ -1,18 +1,28 @@
 # /api_models.py
 """
-Pydantic models for the FastAPI application, mirroring the GraphState TypedDict.
+Pydantic models for the FastAPI application.
 """
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import List, Dict, Any, Optional
 
 class QueryRequest(BaseModel):
     """Request model for starting a new query."""
     user_query: str
 
+# --- NEW MODEL ---
+class ExecuteRequest(BaseModel):
+    """
+    Request model for executing a query.
+    This is much simpler than sending the whole state back.
+    """
+    user_query: str
+    generated_sql: str
+    execution_approved: bool
+
 class GraphStateModel(BaseModel):
     """
     Pydantic model representing the full workflow state.
-    Used for both request and response bodies after the initial query.
+    This is the main response model for BOTH endpoints.
     """
     # User input
     user_query: str
@@ -41,7 +51,7 @@ class GraphStateModel(BaseModel):
     # Formatting
     formatted_response: Optional[str] = None
     
-    # Messages and conversation (simplified for API)
+    # Messages and conversation
     messages: List[str] = []
     
     # Workflow control
@@ -49,11 +59,9 @@ class GraphStateModel(BaseModel):
     error: Optional[str] = None
     requires_human_approval: bool = False
 
-    # This allows converting the TypedDict from the graph directly to this model
-    class Config:
-        orm_mode = True 
-        # In Pydantic v2, orm_mode is replaced by from_attributes
-        # from_attributes = True 
+    # Pydantic v2 config
+    model_config = ConfigDict(from_attributes=True)
+
 
 class StatusResponse(BaseModel):
     """Generic status response model."""
@@ -62,4 +70,4 @@ class StatusResponse(BaseModel):
 
 class SchemaResponse(BaseModel):
     """Response model for returning the database schema."""
-    schema: Dict[str, Any]
+    schema_data: Dict[str, Any]
