@@ -21,7 +21,7 @@ class DatabaseConnection:
                 user=settings.DB_USERNAME,
                 password=settings.DB_PASSWORD,
                 database=settings.DB_DATABASE,
-                as_dict=True,
+                # as_dict=True,  <--- THIS LINE IS REMOVED (OR COMMENTED OUT)
                 tds_version='7.4',
                 autocommit=True
             )
@@ -62,7 +62,7 @@ class DatabaseConnection:
             try:
                 results = cursor.fetchall()
                 if results and isinstance(results[0], dict):
-                    # Ensure all rows share the same keys; if any key is empty, rename it deterministically
+                    # This block will no longer run, but is safe to leave
                     keys = list(results[0].keys())
                     fixed_keys = []
                     for idx, k in enumerate(keys):
@@ -77,13 +77,15 @@ class DatabaseConnection:
                             normalized.append(new_row)
                         return normalized
                     return results
+                
                 # If not dicts, build dicts from cursor.description
+                # THIS LOGIC WILL NOW RUN AND FIX THE ERROR
                 desc = cursor.description or []
                 columns = []
                 for idx, col in enumerate(desc):
                     name = col[0] if col and col[0] else None
                     if not name or str(name).strip() == '':
-                        name = f'column_{idx}'
+                        name = f'column_{idx}' # <-- This handles the unnamed COUNT(*)
                     columns.append(str(name))
                 return [dict(zip(columns, row)) for row in results]
             except Exception as e:
@@ -113,7 +115,17 @@ class DatabaseConnection:
         ORDER BY TABLE_NAME
         """
         results = self.execute_query(query)
-        return [row['TABLE_NAME'] for row in results]
+        # This part will break if we don't adjust for the new column name
+        # The column name from the query is 'TABLE_NAME'
+        # The old logic relied on as_dict=True
+        # Our new logic will use the column name from the query or 'column_0'
+        
+        # Check if the key is 'TABLE_NAME' (from query) or 'column_0' (fallback)
+        if results and 'TABLE_NAME' in results[0]:
+            return [row['TABLE_NAME'] for row in results]
+        elif results and 'column_0' in results[0]:
+             return [row['column_0'] for row in results]
+        return [] # No results
     
     def test_connection(self) -> bool:
         """Test database connection."""
