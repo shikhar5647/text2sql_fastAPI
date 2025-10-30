@@ -24,36 +24,57 @@ class SchemaAgent:
             # Get full schema
             schema = schema_cache.get_schema()
             
-            # Filter to relevant tables; normalize simple plurals to match cache keys
-            relevant_tables = state.get("relevant_tables", [])
-            normalized = []
-            for t in relevant_tables:
-                key = t.strip()
-                if key.lower().endswith('s'):
-                    key = key[:-1]
-                normalized.append(key)
-            relevant_tables = normalized or list(schema.get('tables', {}).keys())
+            # --- START OF FIX ---
             
-            if not relevant_tables:
-                # If no tables identified, include all
-                relevant_tables = list(schema.get('tables', {}).keys())
+            # 1. Get all *actual* table names from the schema (case-insensitive)
+            all_actual_tables = {name.lower(): name for name in schema.get('tables', {}).keys()}
+
+            # 2. Get tables suggested by NLU
+            tables_from_nlu = state.get("relevant_tables", [])
             
-            # Build schema context
+            # 3. Find which NLU tables *actually exist* in our schema
+            matched_tables = []
+            if tables_from_nlu:
+                for t_nlu in tables_from_nlu:
+                    t_lower = t_nlu.lower().strip()
+                    
+                    # Try to find a match (exact, singular, or plural)
+                    if t_lower in all_actual_tables:
+                        matched_tables.append(all_actual_tables[t_lower])
+                    elif t_lower.endswith('s') and t_lower[:-1] in all_actual_tables:
+                        matched_tables.append(all_actual_tables[t_lower[:-1]])
+                    elif f"{t_lower}s" in all_actual_tables:
+                        matched_tables.append(all_actual_tables[f"{t_lower}s"])
+
+            # 4. Use the unique list of *matched* tables.
+            # If no matches were found, this list will be empty.
+            relevant_tables = sorted(list(set(matched_tables)))
+            
+            # 5. CRITICAL: Update the state with the *correct*, *matched* tables.
+            state["relevant_tables"] = relevant_tables
+            
+            # --- END OF FIX ---
+            
+            # Build schema context (This part is now safe)
             schema_parts = []
-            for table_name in relevant_tables:
-                table_info = schema.get('tables', {}).get(table_name) or schema.get('tables', {}).get(table_name.lower()) or schema.get('tables', {}).get(table_name.capitalize())
-                if table_info:
-                    schema_parts.append(f"\n### Table: {table_name}")
-                    schema_parts.append("Columns:")
-                    for col in table_info['columns']:
-                        nullable = "NULL" if col['is_nullable'] == 'YES' else "NOT NULL"
-                        schema_parts.append(
-                            f"  - {col['column_name']} ({col['data_type']}) {nullable}"
-                        )
+            if not relevant_tables:
+                # If list is empty, set empty context and stop.
+                logger.warning(f"No relevant tables found in schema for NLU tables: {tables_from_nlu}")
+                state["schema_context"] = ""
+            else:
+                for table_name in relevant_tables:
+                    table_info = schema.get('tables', {}).get(table_name)
+                    if table_info:
+                        schema_parts.append(f"\n### Table: {table_name}")
+                        schema_parts.append("Columns:")
+                        for col in table_info['columns']:
+                            nullable = "NULL" if col['is_nullable'] == 'YES' else "NOT NULL"
+                            schema_parts.append(
+                                f"  - {col['column_name']} ({col['data_type']}) {nullable}"
+                            )
+                state["schema_context"] = "\n".join(schema_parts)
             
-            state["schema_context"] = "\n".join(schema_parts)
             state["step"] = "schema_retrieved"
-            
             logger.info(f"Schema context built for tables: {relevant_tables}")
             
         except Exception as e:
