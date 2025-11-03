@@ -278,6 +278,144 @@ class SchemaCache:
                         "id","name","client_id","description","slug","category","status","priority","start_date","end_date","currency","budget","created_by","updated_by","created_at","updated_at","billing_type","amount_billed","budget_hours","team_id","channel_id","drive_id","drive_subscription_id","delta_token","drive_item_id","hubspot_id","xero_id","owner_id","owner_email","last_modified_date","project_number"
                     ]
                 }
+                ,
+                'client_team': {
+                    'columns': build_columns([
+                        ("id", "INT"),
+                        ("client_id", "INT"),
+                        ("user_id", "INT"),
+                        ("role", "NVARCHAR(100)"),
+                        ("created_at", "DATETIME2"),
+                        ("updated_at", "DATETIME2"),
+                        ("team_member_id", "INT"),
+                        ("type", "NVARCHAR(50)"),
+                        ("contracted_hours", "DECIMAL(10,2)"),
+                        ("shortcut_id", "NVARCHAR(255)")
+                    ]),
+                    'column_names': [
+                        "id","client_id","user_id","role","created_at","updated_at","team_member_id","type","contracted_hours","shortcut_id"
+                    ]
+                },
+                'project_team': {
+                    'columns': build_columns([
+                        ("id", "INT"),
+                        ("type", "NVARCHAR(50)"),
+                        ("ref_id", "INT"),
+                        ("title", "NVARCHAR(255)"),
+                        ("updated_by", "INT"),
+                        ("updated_at", "DATETIME2"),
+                        ("description", "NVARCHAR(MAX)"),
+                        ("project_id", "INT"),
+                        ("file_type", "NVARCHAR(50)"),
+                        ("file_url", "NVARCHAR(1024)"),
+                        ("change_type", "NVARCHAR(50)")
+                    ]),
+                    'column_names': [
+                        "id","type","ref_id","title","updated_by","updated_at","description","project_id","file_type","file_url","change_type"
+                    ]
+                },
+                'role': {
+                    'columns': build_columns([
+                        ("id", "INT"),
+                        ("name", "NVARCHAR(100)"),
+                        ("created_at", "DATETIME2"),
+                        ("updated_at", "DATETIME2")
+                    ]),
+                    'column_names': ["id","name","created_at","updated_at"]
+                },
+                'user': {
+                    'columns': build_columns([
+                        ("id", "INT"),
+                        ("first_name", "NVARCHAR(100)"),
+                        ("last_name", "NVARCHAR(100)"),
+                        ("email", "NVARCHAR(255)"),
+                        ("avatar", "NVARCHAR(1024)"),
+                        ("azure_ad_id", "NVARCHAR(255)"),
+                        ("created_at", "DATETIME2"),
+                        ("updated_at", "DATETIME2"),
+                        ("groups", "NVARCHAR(MAX)"),
+                        ("employment_type", "NVARCHAR(100)"),
+                        ("contracted_hour", "DECIMAL(10,2)"),
+                        ("role", "NVARCHAR(100)"),
+                        ("drive_delta_token", "NVARCHAR(255)")
+                    ]),
+                    'column_names': [
+                        "id","first_name","last_name","email","avatar","azure_ad_id","created_at","updated_at","groups","employment_type","contracted_hour","role","drive_delta_token"
+                    ]
+                },
+                'xero_contacts': {
+                    'columns': build_columns([
+                        ("name", "NVARCHAR(255)"),
+                        ("contact_id", "NVARCHAR(255)"),
+                        ("contact_number", "NVARCHAR(255)"),
+                        ("account_number", "NVARCHAR(255)"),
+                        ("contact_status", "NVARCHAR(50)"),
+                        ("first_name", "NVARCHAR(100)"),
+                        ("last_name", "NVARCHAR(100)"),
+                        ("email_address", "NVARCHAR(255)"),
+                        ("skype_user_name", "NVARCHAR(255)"),
+                        ("contact_persons", "JSON"),
+                        ("bank_account_details", "NVARCHAR(255)"),
+                        ("tax_number", "NVARCHAR(255)"),
+                        ("accounts_receivable_tax_type", "NVARCHAR(100)"),
+                        ("accounts_payable_tax_type", "NVARCHAR(100)"),
+                        ("addresses", "JSON"),
+                        ("phones", "JSON"),
+                        ("is_supplier", "BIT"),
+                        ("is_customer", "BIT"),
+                        ("default_currency", "NVARCHAR(10)"),
+                        ("xero_network_key", "NVARCHAR(255)"),
+                        ("sales_default_account_code", "NVARCHAR(100)"),
+                        ("purchases_default_account_code", "NVARCHAR(100)"),
+                        ("sales_tracking_categories", "JSON"),
+                        ("purchases_tracking_categories", "JSON"),
+                        ("tracking_category_name", "NVARCHAR(255)"),
+                        ("tracking_option_name", "NVARCHAR(255)"),
+                        ("payment_terms", "JSON")
+                    ]),
+                    'column_names': [
+                        "name","contact_id","contact_number","account_number","contact_status","first_name","last_name","email_address","skype_user_name","contact_persons","bank_account_details","tax_number","accounts_receivable_tax_type","accounts_payable_tax_type","addresses","phones","is_supplier","is_customer","default_currency","xero_network_key","sales_default_account_code","purchases_default_account_code","sales_tracking_categories","purchases_tracking_categories","tracking_category_name","tracking_option_name","payment_terms"
+                    ]
+                },
+                'xero_projects': {
+                    'columns': build_columns([
+                        ("contact_id", "NVARCHAR(255)"),
+                        ("when_upserted_into_data_store", "DATETIME2"),
+                        ("mirror_remote_id", "NVARCHAR(255)"),
+                        ("is_deleted", "BIT"),
+                        ("when_created", "DATETIME2"),
+                        ("when_modified", "DATETIME2"),
+                        ("name", "NVARCHAR(255)"),
+                        ("project_id", "NVARCHAR(255)"),
+                        ("currency_code", "NVARCHAR(10)"),
+                        ("minutes_logged", "INT"),
+                        ("minutes_to_be_invoiced", "INT"),
+                        ("deadline_utc", "DATETIME2"),
+                        ("status", "NVARCHAR(50)"),
+                        ("total_task_amount_currency", "NVARCHAR(10)"),
+                        ("total_task_amount_value", "DECIMAL(18,2)"),
+                        ("total_expense_amount_currency", "NVARCHAR(10)"),
+                        ("total_expense_amount_value", "DECIMAL(18,2)"),
+                        ("task_amount_to_be_invoiced_currency", "NVARCHAR(10)"),
+                        ("task_amount_to_be_invoiced_value", "DECIMAL(18,2)"),
+                        ("task_amount_invoiced_currency", "NVARCHAR(10)"),
+                        ("task_amount_invoiced_value", "DECIMAL(18,2)"),
+                        ("expense_amount_to_be_invoiced_currency", "NVARCHAR(10)"),
+                        ("expense_amount_to_be_invoiced_value", "DECIMAL(18,2)"),
+                        ("expense_amount_invoiced_currency", "NVARCHAR(10)"),
+                        ("expense_amount_invoiced_value", "DECIMAL(18,2)"),
+                        ("project_amount_invoiced_currency", "NVARCHAR(10)"),
+                        ("project_amount_invoiced_value", "DECIMAL(18,2)"),
+                        ("total_to_be_invoiced_currency", "NVARCHAR(10)"),
+                        ("total_to_be_invoiced_value", "DECIMAL(18,2)"),
+                        ("estimate_currency", "NVARCHAR(10)"),
+                        ("estimate_value", "DECIMAL(18,2)"),
+                        ("id", "NVARCHAR(255)")
+                    ]),
+                    'column_names': [
+                        "contact_id","when_upserted_into_data_store","mirror_remote_id","is_deleted","when_created","when_modified","name","project_id","currency_code","minutes_logged","minutes_to_be_invoiced","deadline_utc","status","total_task_amount_currency","total_task_amount_value","total_expense_amount_currency","total_expense_amount_value","task_amount_to_be_invoiced_currency","task_amount_to_be_invoiced_value","task_amount_invoiced_currency","task_amount_invoiced_value","expense_amount_to_be_invoiced_currency","expense_amount_to_be_invoiced_value","expense_amount_invoiced_currency","expense_amount_invoiced_value","project_amount_invoiced_currency","project_amount_invoiced_value","total_to_be_invoiced_currency","total_to_be_invoiced_value","estimate_currency","estimate_value","id"
+                    ]
+                }
             }
         }
         self.cache = manual
