@@ -38,28 +38,26 @@ class Text2SQLAgent:
         
         logger.info(f"Generating SQL for: {user_query}")
         
-        # 2. ENHANCED PROMPT (to prevent hallucination)
-        prompt = f"""You are a senior data engineer generating safe, production-quality T-SQL for Microsoft SQL Server.
-
-You will receive the user request and the available schema. Your job is to write a single, safe SELECT statement.
-
-STRICT RULES:
-- **CRITICAL:** Use **ONLY** the tables and columns provided in the SCHEMA section.
-- If the USER REQUEST cannot be answered using the provided SCHEMA, respond with the exact text:
-  "NO_SCHEMA_MATCH: Cannot answer query with available schema."
-- Output only the SQL, no commentary or markdown fences.
-- Only SELECT is allowed. Never use INSERT/UPDATE/DELETE/CREATE/ALTER/DROP/EXEC.
-- Prefer explicit JOINs with ON clauses over implicit joins.
-- Use TOP 100 by default if the user didn't specify a limit.
-
-SCHEMA (authoritative):
-{schema_context}
-
-USER REQUEST:
-{user_query}
-
-Return only the final SQL (no code fences, no explanation) OR "NO_SCHEMA_MATCH:..."
-"""
+    # 2. ENHANCED PROMPT (to prevent hallucination)
+        prompt = (
+            "You are a senior data engineer generating safe, production-quality T-SQL for Microsoft SQL Server.\n\n"
+            "You will receive the user request and the available schema. Your job is to write a single, safe SELECT statement.\n\n"
+            "NATURAL LANGUAGE MAPPINGS (apply these simple mappings when interpreting the user request):\n"
+            "- Treat words like 'live', 'running', 'ongoing' as meaning status = 'Active' when a status-like column exists (e.g., status, project_status, state).\n"
+            "- When user asks for 'budget left', 'remaining budget', 'how much budget is left', compute it as (budget - spent) when appropriate or use an existing column named 'budget_remaining' / 'budget_left' if present. If an aggregate is required (e.g., multiple expense rows), compute budget left as: budget - COALESCE(SUM(spent_column), 0).\n"
+            "- Be conservative: only reference columns that appear in the provided SCHEMA. If no suitable columns exist, return NO_SCHEMA_MATCH.\n\n"
+            "STRICT RULES:\n"
+            "- **CRITICAL:** Use **ONLY** the tables and columns provided in the SCHEMA section.\n"
+            "- If the USER REQUEST cannot be answered using the provided SCHEMA, respond with the exact text:\n"
+            "  \"NO_SCHEMA_MATCH: Cannot answer query with available schema.\"\n"
+            "- Output only the SQL, no commentary or markdown fences.\n"
+            "- Only SELECT is allowed. Never use INSERT/UPDATE/DELETE/CREATE/ALTER/DROP/EXEC.\n"
+            "- Prefer explicit JOINs with ON clauses over implicit joins.\n"
+            "- Use TOP 100 by default if the user didn't specify a limit.\n\n"
+            f"SCHEMA (authoritative):\n{schema_context}\n\n"
+            f"USER REQUEST:\n{user_query}\n\n"
+            "Return only the final SQL (no code fences, no explanation) OR \"NO_SCHEMA_MATCH:...\"\n"
+        )
         # --- END OF FIX ---
         
         try:

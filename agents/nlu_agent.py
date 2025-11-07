@@ -21,18 +21,22 @@ class NLUAgent:
         logger.info(f"Analyzing intent for query: {user_query}")
         
         prompt = f"""You are an expert NLU agent helping a Text-to-SQL system.
-Read the user's request and extract:
-1) Intent: high-level goal such as list/filter/aggregate/join/detail/count/top-n.
-2) Entities: important nouns/values (companies, cities, dates, ids, statuses, budget thresholds, etc.).
-3) Tables Likely Needed: from the known tables in this database. Use only exact table names you know.
+        Read the user's request and extract:
+        1) Intent: high-level goal such as list/filter/aggregate/join/detail/count/top-n.
+        2) Entities: important nouns/values (companies, cities, dates, ids, statuses, budget thresholds, etc.).
+        3) Tables Likely Needed: from the known tables in this database. Use only exact table names you know.
 
-User Query: {user_query}
+        Normalization rules (simple mappings you should apply before extracting entities):
+        - Treat synonyms for status: 'live', 'running', 'ongoing' -> map to value 'Active' when a status-like column exists.
+        - Treat phrases 'budget left', 'remaining budget' or 'how much budget is left' as a request to compute (budget - spent) or to use a column named 'budget_remaining' / 'budget_left' if available. When extracting an entity for this, include a key-value pair like 'budget_left:yes' or 'budget_left:<threshold>' if a number/threshold is present.
 
-Respond exactly in this format (one per line):
-Intent: <intent>
-Entities: <comma-separated values>
-Tables Likely Needed: <comma-separated exact table names>
-"""
+        User Query: {user_query}
+
+        Respond exactly in this format (one per line):
+        Intent: <intent>
+        Entities: <comma-separated values or key:value pairs, e.g. status:Active, client_name:Acme, budget_left:yes>
+        Tables Likely Needed: <comma-separated exact table names>
+        """
         
         try:
             response = self.model.generate_content(prompt)
