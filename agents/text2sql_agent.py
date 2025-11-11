@@ -38,10 +38,22 @@ class Text2SQLAgent:
         
         logger.info(f"Generating SQL for: {user_query}")
         
-    # 2. ENHANCED PROMPT (to prevent hallucination)
+        # 2. ENHANCED PROMPT (to prevent hallucination)
+        # Load few-shot examples from the project file if available and include them in the prompt
+        examples_text = ""
+        try:
+            examples_path = settings.PROJECT_ROOT / "few_shots.txt"
+            if examples_path.exists():
+                with open(examples_path, "r", encoding="utf-8") as ef:
+                    examples_text = ef.read().strip()
+        except Exception as e:
+            logger.warning(f"Could not load few-shot examples: {e}")
+
         prompt = (
             "You are a senior data engineer generating safe, production-quality T-SQL for Microsoft SQL Server.\n\n"
             "You will receive the user request and the available schema. Your job is to write a single, safe SELECT statement.\n\n"
+            "FEW-SHOT EXAMPLES (use these as style/format guidance; they are authoritative examples of multi-table JOINs and aggregations):\n\n"
+            f"{examples_text}\n\n"
             "NATURAL LANGUAGE MAPPINGS (apply these simple mappings when interpreting the user request):\n"
             "- Treat words like 'live', 'running', 'ongoing' as meaning status = 'Active' when a status-like column exists (e.g., status, project_status, state).\n"
             "- When user asks for 'budget left', 'remaining budget', 'how much budget is left', compute it as (budget - spent) when appropriate or use an existing column named 'budget_remaining' / 'budget_left' if present. If an aggregate is required (e.g., multiple expense rows), compute budget left as: budget - COALESCE(SUM(spent_column), 0).\n"
