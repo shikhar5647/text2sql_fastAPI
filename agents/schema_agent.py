@@ -37,20 +37,41 @@ class SchemaAgent:
             if tables_from_nlu:
                 for t_nlu in tables_from_nlu:
                     t_lower = t_nlu.lower().strip()
-                    
+
                     # Try to find a match (exact, singular, or plural)
                     if t_lower in all_actual_tables:
                         matched_tables.append(all_actual_tables[t_lower])
                     elif t_lower.endswith('s') and t_lower[:-1] in all_actual_tables:
                         matched_tables.append(all_actual_tables[t_lower[:-1]])
                     elif f"{t_lower}s" in all_actual_tables:
-                        matched_tables.append(all_actual_tables[f"{t_lower}s"])
+                        matched_tables.append(all_actual_tables[f"{t_lower}s"]) 
 
-            # 4. Use the unique list of *matched* tables.
-            # If no matches were found, this list will be empty.
-            relevant_tables = sorted(list(set(matched_tables)))
-            
-            # 5. CRITICAL: Update the state with the *correct*, *matched* tables.
+            # 4. If NLU did not suggest valid tables (or suggestions were incomplete),
+            #    attempt token-based matching against table and column names.
+            #    This helps with multi-table queries where the NLU may omit needed tables.
+            token_based_tables = []
+            try:
+                query_text = state.get("user_query", "")
+                tokens = _tokenize(query_text)
+
+                # Build quick lookup of table -> set of tokens from its name and columns
+                for tbl_name, tbl_info in schema.get('tables', {}).items():
+                    tbl_tokens = set(re.findall(r"[a-z0-9_]+", tbl_name.lower()))
+                    col_tokens = set()
+                    for c in tbl_info.get('columns', []):
+                        col_name = c.get('column_name', '') or ''
+                        col_tokens.update(re.findall(r"[a-z0-9_]+", col_name.lower()))
+                    # If any query token intersects table or column tokens, consider it relevant
+                    if tokens & (tbl_tokens | col_tokens):
+                        token_based_tables.append(tbl_name)
+            except Exception:
+                token_based_tables = []
+
+            # 5. Combine matches: prefer NLU-derived matches, but union with token-based matches
+            combined = list(set(matched_tables) | set(token_based_tables))
+            relevant_tables = sorted(combined)
+
+            # 6. Update the state with the *correct*, *matched* tables.
             state["relevant_tables"] = relevant_tables
             
             # --- END OF FIX ---
