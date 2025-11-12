@@ -176,6 +176,23 @@ class SchemaCache:
     def load_manual_schema(self) -> Dict[str, Any]:
         """Load a predefined manual schema for client, contacts, and project tables."""
         logger.info("Loading manual schema definition")
+
+        # If an on-disk schema cache exists, prefer using it so the manual loader
+        # stays in sync with `schema_cache.json`. This allows quick updates by
+        # editing the JSON file without changing source code.
+        try:
+            if self.cache_file.exists():
+                with open(self.cache_file, 'r', encoding='utf-8') as f:
+                    loaded = json.load(f)
+                # basic validation
+                if isinstance(loaded, dict) and 'tables' in loaded:
+                    self.cache = loaded
+                    logger.info("Loaded schema from on-disk cache via load_manual_schema()")
+                    return self.cache
+        except Exception as e:
+            logger.warning(f"Failed to load on-disk schema in load_manual_schema(): {e}")
+
+        # Fallback: embedded manual schema (kept for compatibility when JSON is absent)
         def build_columns(pairs: list[tuple[str, str]]) -> list[dict[str, str]]:
             return [
                 {"column_name": name, "data_type": dtype, "is_nullable": "YES"}
@@ -220,6 +237,7 @@ class SchemaCache:
                         "id","name","slug","email","phone","address1","address2","city","state","country","zipcode","created_at","updated_at","team_id","channel_id","drive_id","delta_token","drive_item_id","hubspot_id","owner_name","status","industry","type","no_employees","description","timezone","created_by","client_number"
                     ]
                 },
+                # Keep other embedded tables as before (contacts, project, client_team, etc.)
                 'contacts': {
                     'columns': build_columns([
                         ("id", "INT"),
@@ -277,8 +295,7 @@ class SchemaCache:
                     'column_names': [
                         "id","name","client_id","description","slug","category","status","priority","start_date","end_date","currency","budget","created_by","updated_by","created_at","updated_at","billing_type","amount_billed","budget_hours","team_id","channel_id","drive_id","drive_subscription_id","delta_token","drive_item_id","hubspot_id","xero_id","owner_id","owner_email","last_modified_date","project_number"
                     ]
-                }
-                ,
+                },
                 'client_team': {
                     'columns': build_columns([
                         ("id", "INT"),
@@ -420,7 +437,7 @@ class SchemaCache:
         }
         self.cache = manual
         self.save_cache()
-        logger.info("Manual schema loaded successfully")
+        logger.info("Manual schema loaded successfully (embedded fallback)")
         return manual
 
 # Global schema cache instance
