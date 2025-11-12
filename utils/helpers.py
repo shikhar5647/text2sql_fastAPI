@@ -65,27 +65,3 @@ def extract_tables_from_query(sql: str) -> List[str]:
     
     return [t.strip('[]') for t in tables if t.strip()]
 
-def ensure_top_limit(sql: str, limit: int = 100) -> str:
-    """Ensure a TOP limit exists for SELECT queries in MSSQL.
-
-    Inserts "TOP {limit}" immediately after the first SELECT if not already present
-    and if the query is not using OFFSET/FETCH. Uses lightweight string handling
-    to avoid driver-specific parse quirks.
-    """
-    if not sql:
-        return sql
-    original = sql.strip()
-    upper = original.upper()
-    if not upper.startswith('SELECT'):
-        return sql
-    if ' TOP ' in upper or ' OFFSET ' in upper or ' FETCH ' in upper:
-        return sql
-    # Find the first occurrence of SELECT at the start and insert TOP
-    # Keep existing capitalization of SELECT by replacing only once at start
-    # Normalize leading whitespace
-    leading_ws_len = len(sql) - len(sql.lstrip())
-    leading_ws = sql[:leading_ws_len]
-    rest = sql[leading_ws_len:]
-    if rest[:6].upper() == 'SELECT':
-        return f"{leading_ws}{rest[:6]} TOP {limit}{rest[6:]}"
-    return sql

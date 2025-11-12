@@ -5,7 +5,7 @@ from config.secrets import secrets_manager
 from config.settings import settings
 from graph.state import GraphState
 from utils.logger import setup_logger
-from utils.helpers import sanitize_sql, ensure_top_limit
+from utils.helpers import sanitize_sql
 
 logger = setup_logger(__name__)
 
@@ -65,7 +65,6 @@ class Text2SQLAgent:
             "- Output only the SQL, no commentary or markdown fences.\n"
             "- Only SELECT is allowed. Never use INSERT/UPDATE/DELETE/CREATE/ALTER/DROP/EXEC.\n"
             "- Prefer explicit JOINs with ON clauses over implicit joins.\n"
-            "- Use TOP 100 by default if the user didn't specify a limit.\n\n"
             f"SCHEMA (authoritative):\n{schema_context}\n\n"
             f"USER REQUEST:\n{user_query}\n\n"
             "Return only the final SQL (no code fences, no explanation) OR \"NO_SCHEMA_MATCH:...\"\n"
@@ -95,7 +94,6 @@ class Text2SQLAgent:
             
             # Sanitize and format
             sql_query = sanitize_sql(sql_query)
-            sql_query = ensure_top_limit(sql_query, limit=100)
             
             state["generated_sql"] = sql_query
             state["step"] = "sql_generated"
