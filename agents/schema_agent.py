@@ -9,7 +9,9 @@ logger = setup_logger(__name__)
 
 def _tokenize(text: str) -> set[str]:
     text = (text or "").lower()
-    tokens = set(re.findall(r"[a-z0-9_]+", text))
+    # Split on non-alphanumeric characters and underscores so 'hubspot_companies'
+    # yields tokens ['hubspot', 'companies'] which helps matching user tokens.
+    tokens = set(re.findall(r"[a-z0-9]+", text))
     stopwords = {"show", "list", "get", "find", "all", "the", "me", "for", "with", "in", "of", "and", "top"}
     return tokens - stopwords
 
@@ -56,14 +58,16 @@ class SchemaAgent:
 
                 # Build quick lookup of table -> set of tokens from its name and columns
                 for tbl_name, tbl_info in schema.get('tables', {}).items():
-                    tbl_tokens = set(re.findall(r"[a-z0-9_]+", tbl_name.lower()))
+                    # split table and column names into alpha-numeric tokens
+                    tbl_tokens = set(re.findall(r"[a-z0-9]+", tbl_name.lower()))
                     col_tokens = set()
                     for c in tbl_info.get('columns', []):
                         col_name = c.get('column_name', '') or ''
-                        col_tokens.update(re.findall(r"[a-z0-9_]+", col_name.lower()))
+                        col_tokens.update(re.findall(r"[a-z0-9]+", col_name.lower()))
                     # If any query token intersects table or column tokens, consider it relevant
                     if tokens & (tbl_tokens | col_tokens):
                         token_based_tables.append(tbl_name)
+                logger.debug(f"SchemaAgent tokens={tokens} token_matches={token_based_tables} nlu_matches={matched_tables}")
             except Exception:
                 token_based_tables = []
 
