@@ -65,6 +65,8 @@ class Text2SQLAgent:
             "- Output only the SQL, no commentary or markdown fences.\n"
             "- Only SELECT is allowed. Never use INSERT/UPDATE/DELETE/CREATE/ALTER/DROP/EXEC.\n"
             "- Prefer explicit JOINs with ON clauses over implicit joins.\n"
+            "- Becareful while type casting while joining.Make sure both key are of the same type.\n"
+            "- Show names along with the associated id's, whenever possible, donot return only ids as its not user friendly and readable.Example: user_id along with user name,client_id along with client name. Project name along with project_id.\n"
             f"SCHEMA (authoritative):\n{schema_context}\n\n"
             f"USER REQUEST:\n{user_query}\n\n"
             "Return only the final SQL (no code fences, no explanation) OR \"NO_SCHEMA_MATCH:...\"\n"
