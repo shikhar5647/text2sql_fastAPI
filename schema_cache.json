@@ -173,6 +173,9 @@
         "timezone",
         "created_by",
         "client_number"
+      ],
+      "relationships": [
+        { "column": "hubspot_id", "references": "hubspot_companies.id" }
       ]
     },
     "contacts": {
@@ -257,6 +260,9 @@
         "hubspot_id",
         "created_at",
         "updated_at"
+      ],
+      "relationships": [
+        { "column": "hubspot_id", "references": "hubspot_contacts.id" }
       ]
     },
     "project": {
@@ -449,6 +455,13 @@
         "owner_email",
         "last_modified_date",
         "project_number"
+      ],
+      "relationships": [
+        { "column": "client_id", "references": "client.id" },
+        { "column": "id", "references": "project_team.project_id" },
+        { "column": "hubspot_id", "references": "hubspot_deals.id" },
+        { "column": "xero_id", "references": "xero_projects.project_id" },
+        { "column": "owner_id", "references": "user.id" }
       ]
     },
     "client_team": {
@@ -515,6 +528,11 @@
         "type",
         "contracted_hours",
         "shortcut_id"
+      ],
+      "relationships": [
+        { "column": "user_id", "references": "user.id" },
+        { "column": "client_id", "references": "client.id" },
+        { "column": "team_member_id", "references": "user.id" }
       ]
     },
     "project_team": {
@@ -593,6 +611,11 @@
         "type",
         "contracted_hours",
         "shortcut_id"
+      ],
+      "relationships": [
+        { "column": "project_id", "references": "project.id" },
+        { "column": "user_id", "references": "user.id" },
+        { "column": "team_member_id", "references": "user.id" }
       ]
     },
     "role": {
@@ -2686,6 +2709,10 @@
         "role_id",
         "created_at",
         "updated_at"
+      ],
+      "relationships": [
+        { "column": "user_id", "references": "user.id" },
+        { "column": "role_id", "references": "role.id" }
       ]
     }
   }
