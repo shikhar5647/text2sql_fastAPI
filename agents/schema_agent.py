@@ -9,8 +9,8 @@ logger = setup_logger(__name__)
 
 def _tokenize(text: str) -> set[str]:
     text = (text or "").lower()
-    # Split on non-alphanumeric characters and underscores so 'hubspot_companies'
-    # yields tokens ['hubspot', 'companies'] which helps matching user tokens.
+    # Split on non-alphanumeric characters and underscores so 'zoho_accounts'
+    # yields tokens ['zoho', 'accounts'] which helps matching user tokens.
     tokens = set(re.findall(r"[a-z0-9]+", text))
     stopwords = {"show", "list", "get", "find", "all", "the", "me", "for", "with", "in", "of", "and", "top"}
     return tokens - stopwords
