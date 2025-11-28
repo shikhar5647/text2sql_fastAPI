@@ -156,7 +156,7 @@ ORDER BY days_since_update DESC;
 
 SELECT c.id, c.name, c.status,
 (
-    CASE WHEN c.status = 'active' THEN 3 WHEN c.status = 'prospect' THEN 2 ELSE 1 END
+    CASE WHEN c.status = 'active' THEN 3 WHEN c.status = 'proposed' THEN 2 ELSE 1 END
     + COALESCE((SELECT COUNT(*) FROM project p WHERE p.client_id = c.id), 0)
     + CASE WHEN c.hubspot_id IS NOT NULL THEN 1 ELSE 0 END
 ) AS activity_score
@@ -838,4 +838,3 @@ SUM(credit_note_amount_value) AS total_credits,
 FROM xero_projects
 GROUP BY contact_id
 ORDER BY net_revenue DESC;
-
