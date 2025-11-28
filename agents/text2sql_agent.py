@@ -48,16 +48,37 @@ class Text2SQLAgent:
                     examples_text = ef.read().strip()
         except Exception as e:
             logger.warning(f"Could not load few-shot examples: {e}")
-
+            
+            
+            
         prompt = (
             "You are a senior data engineer generating safe, production-quality T-SQL for Microsoft SQL Server.\n\n"
+            "This system is built for Trimstone and runs against a single Trimstone-owned database. All queries should assume the context is Trimstone’s internal database environment.\n"
+            "Never add tenancy filters like tenant_id, org_id, etc. unless they exist in the schema.\n"
+            "Never ask the user to disambiguate which database or tenant to use.\n\n"
+            
             "You will receive the user request and the available schema. Your job is to write a single, safe SELECT statement.\n\n"
+            
             "FEW-SHOT EXAMPLES (use these as style/format guidance; they are authoritative examples of multi-table JOINs and aggregations):\n\n"
             f"{examples_text}\n\n"
+            
             "NATURAL LANGUAGE MAPPINGS (apply these simple mappings when interpreting the user request):\n"
             "- Treat words like 'live', 'running', 'ongoing' as meaning status = 'Active' when a status-like column exists (e.g., status, project_status, state).\n"
             "- When user asks for 'budget left', 'remaining budget', 'how much budget is left', compute it as (budget - spent) when appropriate or use an existing column named 'budget_remaining' / 'budget_left' if present. If an aggregate is required (e.g., multiple expense rows), compute budget left as: budget - COALESCE(SUM(spent_column), 0).\n"
             "- Be conservative: only reference columns that appear in the provided SCHEMA. If no suitable columns exist, return NO_SCHEMA_MATCH.\n\n"
+            
+            "NAME RESOLUTION & USER MATCHING (CRITICAL RULES for PERSON NAME queries):\n"
+            "- If the user request mentions a person's name (e.g., 'James', 'Hazal', 'Leila', etc.), treat it as a reference to the `user` table.\n"
+            "- Always match name using LIKE for both first and last name, even if the name appears to be complete.\n"
+            "- ALWAYS use this exact matching pattern (case insensitive + partial match):\n"
+            "    WHERE user.first_name LIKE '%<name>%' OR user.last_name LIKE '%<name>%'\n"
+            "-use this kind of query so that we donot miss out anything using both id and email for matching: SELECT p.id AS project_id, p.name AS project_name, u.id AS owner_user_id, u.first_name, u.last_name, u.email AS owner_email FROM project p LEFT JOIN [user] u ON p.owner_id = u.id OR p.owner_email = u.email;\n"
+            "- NEVER use '=' for name matching unless explicitly instructed.\n"
+            "- Names should always be resolved BEFORE joining to related records such as projects, clients, tasks, etc.\n"
+            "- Example: 'Show me all projects James is working on' MUST be translated into a query that joins through the user table and uses LIKE instead of '='.\n"
+            "- If multiple users match the name, return all matching rows.\n"
+            "- If the schema does not contain the required user table or name columns, return NO_SCHEMA_MATCH.\n\n"
+            
             "STRICT RULES:\n"
             "- **CRITICAL:** Use **ONLY** the tables and columns provided in the SCHEMA section.\n"
             "- If the USER REQUEST cannot be answered using the provided SCHEMA, respond with the exact text:\n"
@@ -65,12 +86,38 @@ class Text2SQLAgent:
             "- Output only the SQL, no commentary or markdown fences.\n"
             "- Only SELECT is allowed. Never use INSERT/UPDATE/DELETE/CREATE/ALTER/DROP/EXEC.\n"
             "- Prefer explicit JOINs with ON clauses over implicit joins.\n"
-            "- Becareful while type casting while joining.Make sure both key are of the same type.\n"
-            "- Show names along with the associated id's, whenever possible, donot return only ids as its not user friendly and readable.Example: user_id along with user name,client_id along with client name. Project name along with project_id.\n"
+            "- Donot perform type casting while joining. In most of the cases, keys are of the same type already.\n"
+            "- Show names along with the associated id's, whenever possible. Do not return only ids as it's not user friendly and readable. Example: user_id along with user name, client_id along with client name, project name along with project_id.\n\n"
+            "- Donot assume join relations between tables. Please check the relations provided.\n"
+            
             f"SCHEMA (authoritative):\n{schema_context}\n\n"
             f"USER REQUEST:\n{user_query}\n\n"
             "Return only the final SQL (no code fences, no explanation) OR \"NO_SCHEMA_MATCH:...\"\n"
         )
+
+
+        # prompt = (
+        #     "You are a senior data engineer generating safe, production-quality T-SQL for Microsoft SQL Server.\n\n"
+        #     "You will receive the user request and the available schema. Your job is to write a single, safe SELECT statement.\n\n"
+        #     "FEW-SHOT EXAMPLES (use these as style/format guidance; they are authoritative examples of multi-table JOINs and aggregations):\n\n"
+        #     f"{examples_text}\n\n"
+        #     "NATURAL LANGUAGE MAPPINGS (apply these simple mappings when interpreting the user request):\n"
+        #     "- Treat words like 'live', 'running', 'ongoing' as meaning status = 'Active' when a status-like column exists (e.g., status, project_status, state).\n"
+        #     "- When user asks for 'budget left', 'remaining budget', 'how much budget is left', compute it as (budget - spent) when appropriate or use an existing column named 'budget_remaining' / 'budget_left' if present. If an aggregate is required (e.g., multiple expense rows), compute budget left as: budget - COALESCE(SUM(spent_column), 0).\n"
+        #     "- Be conservative: only reference columns that appear in the provided SCHEMA. If no suitable columns exist, return NO_SCHEMA_MATCH.\n\n"
+        #     "STRICT RULES:\n"
+        #     "- **CRITICAL:** Use **ONLY** the tables and columns provided in the SCHEMA section.\n"
+        #     "- If the USER REQUEST cannot be answered using the provided SCHEMA, respond with the exact text:\n"
+        #     "  \"NO_SCHEMA_MATCH: Cannot answer query with available schema.\"\n"
+        #     "- Output only the SQL, no commentary or markdown fences.\n"
+        #     "- Only SELECT is allowed. Never use INSERT/UPDATE/DELETE/CREATE/ALTER/DROP/EXEC.\n"
+        #     "- Prefer explicit JOINs with ON clauses over implicit joins.\n"
+        #     "- Donot perform type casting while joining.In most of the cases,keys are of the same type already.\n"
+        #     "- Show names along with the associated id's, whenever possible, donot return only ids as its not user friendly and readable.Example: user_id along with user name,client_id along with client name. Project name along with project_id.\n"
+        #     f"SCHEMA (authoritative):\n{schema_context}\n\n"
+        #     f"USER REQUEST:\n{user_query}\n\n"
+        #     "Return only the final SQL (no code fences, no explanation) OR \"NO_SCHEMA_MATCH:...\"\n"
+        # )
         # --- END OF FIX ---
         
         try:
