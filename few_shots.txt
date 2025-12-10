@@ -503,6 +503,46 @@ JOIN project p ON pt.project_id=p.id
 WHERE pt.file_type IN('pdf','docx')
 ORDER BY pt.updated_at DESC;
 
+-- project_role examples
+
+-- how many users with the role Senior Partner across projects
+SELECT COUNT(DISTINCT pt.user_id) AS senior_partner_user_count
+FROM project_team pt
+LEFT JOIN project_role pr ON pr.id = pt.project_role
+WHERE pr.name LIKE '%Senior Partner%';
+
+-- Tell me the common users between all the projects under '10102-01 Max Matthiessen' client
+WITH client_projects AS (
+    SELECT p.id AS project_id
+    FROM project p
+    JOIN client c ON p.client_id = c.id
+    WHERE c.name LIKE '%10102-01 Max Matthiessen%'
+),
+user_project_counts AS (
+    SELECT 
+        pt.user_id,
+        COUNT(DISTINCT pt.project_id) AS project_count
+    FROM project_team pt
+    JOIN client_projects cp ON pt.project_id = cp.project_id
+    GROUP BY pt.user_id
+),
+total_projects AS (
+    SELECT COUNT(*) AS total_count
+    FROM client_projects
+)
+SELECT 
+    u.id AS user_id,
+    u.first_name,
+    u.last_name,
+    u.email,
+    ct.role
+FROM [user] u
+JOIN user_project_counts upc ON u.id = upc.user_id
+JOIN total_projects tp ON upc.project_count = tp.total_count
+JOIN client_team ct ON u.id = ct.user_id
+JOIN client c ON ct.client_id = c.id
+WHERE c.name LIKE '%10102-01 Max Matthiessen%';
+
 
 
 
