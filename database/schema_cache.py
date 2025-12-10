@@ -340,6 +340,15 @@ class SchemaCache:
                     ]),
                     'column_names': ["id","name","created_at","updated_at"]
                 },
+                'project_role': {
+                    'columns': build_columns([
+                        ("id", "INT"),
+                        ("name", "NVARCHAR(255)"),
+                        ("created_at", "DATETIME2"),
+                        ("updated_at", "DATETIME2")
+                    ]),
+                    'column_names': ["id", "name", "created_at", "updated_at"]
+                },
                 'user': {
                     'columns': build_columns([
                         ("id", "INT"),

@@ -175,7 +175,7 @@
         "client_number"
       ],
       "relationships": [
-        { "column": "hubspot_id", "references": "zoho_accounts.id" }
+        { "column": "hubspot_id", "references": "hubspot_companies.id" }
       ]
     },
     "contacts": {
@@ -262,7 +262,7 @@
         "updated_at"
       ],
       "relationships": [
-        { "column": "hubspot_id", "references": "zoho_contacts.id" }
+        { "column": "hubspot_id", "references": "hubspot_contacts.id" }
       ]
     },
     "project": {
@@ -459,7 +459,7 @@
       "relationships": [
         { "column": "client_id", "references": "client.id" },
         { "column": "id", "references": "project_team.project_id" },
-        { "column": "hubspot_id", "references": "zoho_deals.id" },
+        { "column": "hubspot_id", "references": "hubspot_deals.id" },
         { "column": "xero_id", "references": "xero_projects.project_id" },
         { "column": "owner_id", "references": "user.id" }
       ]
@@ -1098,123 +1098,1578 @@
         "id"
       ]
     },
-    "zoho_accounts": {
-    "columns": [
-      { "column_name": "id", "data_type": "NVARCHAR(255)", "is_nullable": "NO", "description": "Unique account ID" },
-      { "column_name": "name", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Account name" },
-      { "column_name": "slug", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "URL-friendly slug" },
-      { "column_name": "email", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Account email address" },
-      { "column_name": "phone", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Primary phone number" },
-      { "column_name": "address1", "data_type": "NVARCHAR(1000)", "is_nullable": "YES", "description": "Primary address line 1" },
-      { "column_name": "address2", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Address line 2" },
-      { "column_name": "city", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "City name" },
-      { "column_name": "state", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "State name" },
-      { "column_name": "country", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Country name" },
-      { "column_name": "zipcode", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Postal or ZIP code" },
-      { "column_name": "created_at", "data_type": "DATETIME", "is_nullable": "NO", "description": "Record creation time" },
-      { "column_name": "updated_at", "data_type": "DATETIME", "is_nullable": "NO", "description": "Last update timestamp" },
-      { "column_name": "owner_name", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Owner name" },
-      { "column_name": "status", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Account status" },
-      { "column_name": "industry", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Industry sector" },
-      { "column_name": "type", "data_type": "NVARCHAR(100)", "is_nullable": "YES", "description": "Account type" },
-      { "column_name": "no_employees", "data_type": "INT", "is_nullable": "YES", "description": "Number of employees" },
-      { "column_name": "description", "data_type": "NVARCHAR(4000)", "is_nullable": "YES", "description": "Account description" },
-      { "column_name": "timezone", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Timezone" },
-      { "column_name": "created_by", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Created by user" },
-      { "column_name": "website_url", "data_type": "VARCHAR(255)", "is_nullable": "YES", "description": "Website URL" },
-      { "column_name": "parent_company", "data_type": "VARCHAR(100)", "is_nullable": "YES", "description": "Parent company" },
-      { "column_name": "annual_revenue", "data_type": "FLOAT", "is_nullable": "YES", "description": "Annual revenue" },
-      { "column_name": "industry_group", "data_type": "VARCHAR(100)", "is_nullable": "YES", "description": "Industry group" },
-      { "column_name": "last_activity_date", "data_type": "VARCHAR(100)", "is_nullable": "YES", "description": "Last activity timestamp" },
-      { "column_name": "linkedin", "data_type": "VARCHAR(1000)", "is_nullable": "YES", "description": "LinkedIn URL" }
-    ],
-    "column_names": [
-      "id", "name", "slug", "email", "phone", "address1", "address2",
-      "city", "state", "country", "zipcode", "created_at", "updated_at",
-      "owner_name", "status", "industry", "type", "no_employees", "description",
-      "timezone", "created_by", "website_url", "parent_company", "annual_revenue",
-      "industry_group", "last_activity_date", "linkedin"
-    ],
-    "relationships": [
-        { "column": "id", "references": "zoho_deals.account_id"},
-        { "column": "id", "references": "client.hubspot_id"}
+    "hubspot_companies": {
+      "columns": [
+        {
+          "column_name": "about_us",
+          "data_type": "NVARCHAR(MAX)",
+          "is_nullable": "YES",
+          "description": "Description about the company"
+        },
+        {
+          "column_name": "annual_revenue",
+          "data_type": "DECIMAL(18,2)",
+          "is_nullable": "YES",
+          "description": "Annual revenue of the company"
+        },
+        {
+          "column_name": "brands",
+          "data_type": "JSON",
+          "is_nullable": "YES",
+          "description": "List of brands associated with the company"
+        },
+        {
+          "column_name": "city",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "City name"
+        },
+        {
+          "column_name": "close_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date the company or deal was closed"
+        },
+        {
+          "column_name": "company_domain_name",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Company’s domain name"
+        },
+        {
+          "column_name": "country_region",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "Country or region name"
+        },
+        {
+          "column_name": "country_region_code",
+          "data_type": "NVARCHAR(10)",
+          "is_nullable": "YES",
+          "description": "ISO country/region code"
+        },
+        {
+          "column_name": "create_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Record creation date"
+        },
+        {
+          "column_name": "created_by_user_id",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "ID of the user who created the record"
+        },
+        {
+          "column_name": "description",
+          "data_type": "NVARCHAR(MAX)",
+          "is_nullable": "YES",
+          "description": "General description of the company"
+        },
+        {
+          "column_name": "employee_range",
+          "data_type": "NVARCHAR(50)",
+          "is_nullable": "YES",
+          "description": "Employee range (e.g. 1–10, 100–500)"
+        },
+        {
+          "column_name": "first_contact_create_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "When first contact was created"
+        },
+        {
+          "column_name": "first_deal_created_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "When first deal was created"
+        },
+        {
+          "column_name": "has_been_enriched",
+          "data_type": "BIT",
+          "is_nullable": "YES",
+          "description": "Indicates if record is enriched"
+        },
+        {
+          "column_name": "ideal_customer_profile_tier",
+          "data_type": "NVARCHAR(50)",
+          "is_nullable": "YES",
+          "description": "Customer tier classification"
+        },
+        {
+          "column_name": "industry",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "Industry sector"
+        },
+        {
+          "column_name": "industry_group",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "Broader industry category"
+        },
+        {
+          "column_name": "is_public",
+          "data_type": "BIT",
+          "is_nullable": "YES",
+          "description": "Whether the company is public"
+        },
+        {
+          "column_name": "last_activity_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Last recorded activity date"
+        },
+        {
+          "column_name": "last_contacted",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Last contact date"
+        },
+        {
+          "column_name": "last_modified_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Last modification date"
+        },
+        {
+          "column_name": "last_engagement_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Last engagement with company"
+        },
+        {
+          "column_name": "latest_traffic_source",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Latest source of web traffic"
+        },
+        {
+          "column_name": "latest_traffic_source_data_1",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Additional traffic source info 1"
+        },
+        {
+          "column_name": "latest_traffic_source_data_2",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Additional traffic source info 2"
+        },
+        {
+          "column_name": "latest_traffic_source_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "When latest traffic was captured"
+        },
+        {
+          "column_name": "lead_status",
+          "data_type": "NVARCHAR(50)",
+          "is_nullable": "YES",
+          "description": "Lead status (e.g. new, qualified)"
+        },
+        {
+          "column_name": "lifecycle_stage",
+          "data_type": "NVARCHAR(50)",
+          "is_nullable": "YES",
+          "description": "HubSpot lifecycle stage"
+        },
+        {
+          "column_name": "linkedin_handle",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "LinkedIn handle"
+        },
+        {
+          "column_name": "merged_company_ids",
+          "data_type": "JSON",
+          "is_nullable": "YES",
+          "description": "IDs of merged companies"
+        },
+        {
+          "column_name": "company_name",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Name of the company"
+        },
+        {
+          "column_name": "next_activity_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Next scheduled activity date"
+        },
+        {
+          "column_name": "number_of_associated_contacts",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Number of linked contacts"
+        },
+        {
+          "column_name": "number_of_associated_deals",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Number of linked deals"
+        },
+        {
+          "column_name": "number_of_child_companies",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Number of subsidiary companies"
+        },
+        {
+          "column_name": "number_of_employees",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Employee count"
+        },
+        {
+          "column_name": "number_of_open_deals",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Number of open deals"
+        },
+        {
+          "column_name": "owner",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Owner name"
+        },
+        {
+          "column_name": "owner_assigned_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "When the owner was assigned"
+        },
+        {
+          "column_name": "owners_main_team",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Owner’s primary team"
+        },
+        {
+          "column_name": "parent_company",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Parent company name"
+        },
+        {
+          "column_name": "phone_number",
+          "data_type": "NVARCHAR(50)",
+          "is_nullable": "YES",
+          "description": "Company phone number"
+        },
+        {
+          "column_name": "postal_code",
+          "data_type": "NVARCHAR(20)",
+          "is_nullable": "YES",
+          "description": "Postal or ZIP code"
+        },
+        {
+          "column_name": "quick_context",
+          "data_type": "NVARCHAR(MAX)",
+          "is_nullable": "YES",
+          "description": "Quick context or summary"
+        },
+        {
+          "column_name": "recent_deal_amount",
+          "data_type": "DECIMAL(18,2)",
+          "is_nullable": "YES",
+          "description": "Most recent deal amount"
+        },
+        {
+          "column_name": "recent_deal_close_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date of last closed deal"
+        },
+        {
+          "column_name": "record_id",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "System record ID"
+        },
+        {
+          "column_name": "record_source",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Source system name"
+        },
+        {
+          "column_name": "record_source_detail_1",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Source system detail 1"
+        },
+        {
+          "column_name": "record_source_detail_2",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Source system detail 2"
+        },
+        {
+          "column_name": "record_source_detail_3",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Source system detail 3"
+        },
+        {
+          "column_name": "revenue_range",
+          "data_type": "NVARCHAR(50)",
+          "is_nullable": "YES",
+          "description": "Revenue range category"
+        },
+        {
+          "column_name": "shared_teams",
+          "data_type": "JSON",
+          "is_nullable": "YES",
+          "description": "Teams with shared access"
+        },
+        {
+          "column_name": "shared_users",
+          "data_type": "JSON",
+          "is_nullable": "YES",
+          "description": "Users with shared access"
+        },
+        {
+          "column_name": "state_region",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "State or region name"
+        },
+        {
+          "column_name": "state_region_code",
+          "data_type": "NVARCHAR(20)",
+          "is_nullable": "YES",
+          "description": "State/region short code"
+        },
+        {
+          "column_name": "street_address",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Primary street address"
+        },
+        {
+          "column_name": "street_address_2",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Secondary street address"
+        },
+        {
+          "column_name": "target_account",
+          "data_type": "BIT",
+          "is_nullable": "YES",
+          "description": "Whether this is a target account"
+        },
+        {
+          "column_name": "time_zone",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "Time zone"
+        },
+        {
+          "column_name": "total_money_raised",
+          "data_type": "DECIMAL(18,2)",
+          "is_nullable": "YES",
+          "description": "Total money raised (funding)"
+        },
+        {
+          "column_name": "total_revenue",
+          "data_type": "DECIMAL(18,2)",
+          "is_nullable": "YES",
+          "description": "Total recorded revenue"
+        },
+        {
+          "column_name": "type",
+          "data_type": "NVARCHAR(50)",
+          "is_nullable": "YES",
+          "description": "Company type (prospect, customer, etc.)"
+        },
+        {
+          "column_name": "updated_by_user_id",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "User ID who last updated the record"
+        },
+        {
+          "column_name": "web_technologies",
+          "data_type": "JSON",
+          "is_nullable": "YES",
+          "description": "Web technologies used"
+        },
+        {
+          "column_name": "website_url",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Company website URL"
+        },
+        {
+          "column_name": "year_founded",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Year company was founded"
+        },
+        {
+          "column_name": "facebook_company_page",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Facebook page URL"
+        },
+        {
+          "column_name": "facebook_fans",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Number of Facebook followers"
+        },
+        {
+          "column_name": "google_plus_page",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Google Plus page (legacy)"
+        },
+        {
+          "column_name": "linkedin_bio",
+          "data_type": "NVARCHAR(MAX)",
+          "is_nullable": "YES",
+          "description": "LinkedIn bio or company info"
+        },
+        {
+          "column_name": "linkedin_company_page",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "LinkedIn page URL"
+        },
+        {
+          "column_name": "twitter_bio",
+          "data_type": "NVARCHAR(MAX)",
+          "is_nullable": "YES",
+          "description": "Twitter bio"
+        },
+        {
+          "column_name": "twitter_followers",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Twitter follower count"
+        },
+        {
+          "column_name": "twitter_handle",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Twitter handle"
+        },
+        {
+          "column_name": "days_to_close",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Days taken to close deals"
+        },
+        {
+          "column_name": "first_touch_converting_campaign",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "First converting campaign name"
+        },
+        {
+          "column_name": "last_touch_converting_campaign",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Last converting campaign name"
+        },
+        {
+          "column_name": "number_of_pageviews",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Number of pageviews recorded"
+        },
+        {
+          "column_name": "number_of_sessions",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Number of sessions recorded"
+        },
+        {
+          "column_name": "original_traffic_source_drill_down_1",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Original traffic detail 1"
+        },
+        {
+          "column_name": "original_traffic_source_drill_down_2",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Original traffic detail 2"
+        },
+        {
+          "column_name": "original_traffic_source",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Original traffic source"
+        },
+        {
+          "column_name": "time_first_seen",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "First seen date/time"
+        },
+        {
+          "column_name": "time_last_seen",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Last seen date/time"
+        },
+        {
+          "column_name": "time_of_first_session",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "First session timestamp"
+        },
+        {
+          "column_name": "time_of_last_session",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Last session timestamp"
+        },
+        {
+          "column_name": "first_conversion",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "First conversion event"
+        },
+        {
+          "column_name": "first_conversion_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "First conversion date"
+        },
+        {
+          "column_name": "number_of_form_submissions",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Form submission count"
+        },
+        {
+          "column_name": "recent_conversion",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Most recent conversion name"
+        },
+        {
+          "column_name": "recent_conversion_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Most recent conversion date"
+        },
+        {
+          "column_name": "id",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "NO",
+          "description": "HubSpot company ID"
+        }
+      ],
+      "column_names": [
+        "about_us",
+        "annual_revenue",
+        "brands",
+        "city",
+        "close_date",
+        "company_domain_name",
+        "country_region",
+        "country_region_code",
+        "create_date",
+        "created_by_user_id",
+        "description",
+        "employee_range",
+        "first_contact_create_date",
+        "first_deal_created_date",
+        "has_been_enriched",
+        "ideal_customer_profile_tier",
+        "industry",
+        "industry_group",
+        "is_public",
+        "last_activity_date",
+        "last_contacted",
+        "last_modified_date",
+        "last_engagement_date",
+        "latest_traffic_source",
+        "latest_traffic_source_data_1",
+        "latest_traffic_source_data_2",
+        "latest_traffic_source_date",
+        "lead_status",
+        "lifecycle_stage",
+        "linkedin_handle",
+        "merged_company_ids",
+        "company_name",
+        "next_activity_date",
+        "number_of_associated_contacts",
+        "number_of_associated_deals",
+        "number_of_child_companies",
+        "number_of_employees",
+        "number_of_open_deals",
+        "owner",
+        "owner_assigned_date",
+        "owners_main_team",
+        "parent_company",
+        "phone_number",
+        "postal_code",
+        "quick_context",
+        "recent_deal_amount",
+        "recent_deal_close_date",
+        "record_id",
+        "record_source",
+        "record_source_detail_1",
+        "record_source_detail_2",
+        "record_source_detail_3",
+        "revenue_range",
+        "shared_teams",
+        "shared_users",
+        "state_region",
+        "state_region_code",
+        "street_address",
+        "street_address_2",
+        "target_account",
+        "time_zone",
+        "total_money_raised",
+        "total_revenue",
+        "type",
+        "updated_by_user_id",
+        "web_technologies",
+        "website_url",
+        "year_founded",
+        "facebook_company_page",
+        "facebook_fans",
+        "google_plus_page",
+        "linkedin_bio",
+        "linkedin_company_page",
+        "twitter_bio",
+        "twitter_followers",
+        "twitter_handle",
+        "days_to_close",
+        "first_touch_converting_campaign",
+        "last_touch_converting_campaign",
+        "number_of_pageviews",
+        "number_of_sessions",
+        "original_traffic_source_drill_down_1",
+        "original_traffic_source_drill_down_2",
+        "original_traffic_source",
+        "time_first_seen",
+        "time_last_seen",
+        "time_of_first_session",
+        "time_of_last_session",
+        "first_conversion",
+        "first_conversion_date",
+        "number_of_form_submissions",
+        "recent_conversion",
+        "recent_conversion_date",
+        "id"
       ]
-  },
-
-  "zoho_contacts": {
-    "columns": [
-      { "column_name": "id", "data_type": "NVARCHAR(255)", "is_nullable": "NO", "description": "Unique contact ID" },
-      { "column_name": "first_name", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "First name" },
-      { "column_name": "last_name", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Last name" },
-      { "column_name": "email", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Email address" },
-      { "column_name": "owner", "data_type": "NVARCHAR(1000)", "is_nullable": "YES", "description": "Owner identifier" },
-      { "column_name": "phone", "data_type": "NVARCHAR(100)", "is_nullable": "YES", "description": "Phone number" },
-      { "column_name": "mobile", "data_type": "NVARCHAR(100)", "is_nullable": "YES", "description": "Mobile number" },
-      { "column_name": "stage", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Contact stage" },
-      { "column_name": "created_at", "data_type": "DATETIME", "is_nullable": "YES", "description": "Creation timestamp" },
-      { "column_name": "updated_at", "data_type": "DATETIME", "is_nullable": "YES", "description": "Last update timestamp" },
-      { "column_name": "city", "data_type": "VARCHAR(100)", "is_nullable": "YES", "description": "City" },
-      { "column_name": "last_activity_date", "data_type": "VARCHAR(100)", "is_nullable": "YES", "description": "Last activity date" },
-      { "column_name": "linkedIn", "data_type": "VARCHAR(500)", "is_nullable": "YES", "description": "LinkedIn URL" },
-      { "column_name": "owner_name", "data_type": "VARCHAR(255)", "is_nullable": "YES", "description": "Owner name" },
-      { "column_name": "industry_group", "data_type": "VARCHAR(252)", "is_nullable": "YES", "description": "Industry group" },
-      { "column_name": "title", "data_type": "VARCHAR(500)", "is_nullable": "YES", "description": "Job title" }
-    ],
-    "column_names": [
-      "id", "first_name", "last_name", "email", "owner", "phone",
-      "mobile", "stage", "created_at", "updated_at", "city",
-      "last_activity_date", "linkedIn", "owner_name", "industry_group", "title"
-    ],
-    "relationships": [
-        { "column": "id", "references": "contacts.hubspot_id"}
+    },
+    "hubspot_contacts": {
+      "columns": [
+        {
+          "column_name": "annual_revenue",
+          "data_type": "DECIMAL(18,2)",
+          "is_nullable": "YES",
+          "description": "Reported annual revenue of the contact’s organization"
+        },
+        {
+          "column_name": "brands",
+          "data_type": "JSON",
+          "is_nullable": "YES",
+          "description": "Associated brands or product lines"
+        },
+        {
+          "column_name": "buying_role",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "Buying role of the contact (e.g. Decision Maker, Influencer)"
+        },
+        {
+          "column_name": "campaign_of_last_booking_in_meetings_tool",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Campaign linked to last meeting booking"
+        },
+        {
+          "column_name": "city",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "City of the contact"
+        },
+        {
+          "column_name": "close_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date the contact’s related deal was closed"
+        },
+        {
+          "column_name": "company_name",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Company name associated with the contact"
+        },
+        {
+          "column_name": "contact_owner",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "HubSpot owner of this contact"
+        },
+        {
+          "column_name": "contact_unworked",
+          "data_type": "BIT",
+          "is_nullable": "YES",
+          "description": "Indicates if contact has not been worked"
+        },
+        {
+          "column_name": "country_region",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "Country or region"
+        },
+        {
+          "column_name": "country_region_code",
+          "data_type": "NVARCHAR(10)",
+          "is_nullable": "YES",
+          "description": "Country or region short code"
+        },
+        {
+          "column_name": "create_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date contact record was created"
+        },
+        {
+          "column_name": "created_by_user_id",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "ID of the user who created the record"
+        },
+        {
+          "column_name": "cumulative_time_in_lifecycle_stage",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Total time contact has spent in current lifecycle stage"
+        },
+        {
+          "column_name": "currently_in_sequence",
+          "data_type": "BIT",
+          "is_nullable": "YES",
+          "description": "Whether contact is currently enrolled in a sequence"
+        },
+        {
+          "column_name": "date_entered_lifecycle_stage",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "When contact entered current lifecycle stage"
+        },
+        {
+          "column_name": "date_exited_lifecycle_stage",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "When contact exited previous lifecycle stage"
+        },
+        {
+          "column_name": "date_of_last_meeting_booked_in_meetings_tool",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Last meeting date booked via HubSpot meetings"
+        },
+        {
+          "column_name": "date_of_first_engagement",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date of first recorded engagement"
+        },
+        {
+          "column_name": "days_to_close",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Number of days taken to close deal associated with contact"
+        },
+        {
+          "column_name": "description_of_first_engagement",
+          "data_type": "NVARCHAR(MAX)",
+          "is_nullable": "YES",
+          "description": "Text description of first engagement"
+        },
+        {
+          "column_name": "email",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Contact’s email address"
+        },
+        {
+          "column_name": "email_domain",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Email domain (e.g. gmail.com)"
+        },
+        {
+          "column_name": "employment_role",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "Contact’s job role"
+        },
+        {
+          "column_name": "employment_seniority",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "Contact’s seniority level"
+        },
+        {
+          "column_name": "employment_sub_role",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "Contact’s job sub-role"
+        },
+        {
+          "column_name": "enriched_email_bounce_detected",
+          "data_type": "BIT",
+          "is_nullable": "YES",
+          "description": "Whether an email bounce was detected"
+        },
+        {
+          "column_name": "enrichment_opt_out",
+          "data_type": "BIT",
+          "is_nullable": "YES",
+          "description": "If contact opted out of data enrichment"
+        },
+        {
+          "column_name": "enrichment_opt_out_timestamp",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Timestamp when enrichment opt-out occurred"
+        },
+        {
+          "column_name": "fax_number",
+          "data_type": "NVARCHAR(50)",
+          "is_nullable": "YES",
+          "description": "Contact’s fax number"
+        },
+        {
+          "column_name": "first_deal_created_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date of first associated deal"
+        },
+        {
+          "column_name": "first_name",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "Contact’s first name"
+        },
+        {
+          "column_name": "has_been_enriched",
+          "data_type": "BIT",
+          "is_nullable": "YES",
+          "description": "Whether data enrichment has occurred"
+        },
+        {
+          "column_name": "hubspot_score",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "HubSpot score assigned to contact"
+        },
+        {
+          "column_name": "id_of_first_engagement",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "ID of first engagement record"
+        },
+        {
+          "column_name": "industry",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "Industry of associated company"
+        },
+        {
+          "column_name": "job_title",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Contact’s job title"
+        },
+        {
+          "column_name": "last_activity_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date of last activity on record"
+        },
+        {
+          "column_name": "last_contacted",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date contact was last contacted"
+        },
+        {
+          "column_name": "last_name",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "Contact’s last name"
+        },
+        {
+          "column_name": "last_modified_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "When record was last modified"
+        },
+        {
+          "column_name": "last_nps_survey_comment",
+          "data_type": "NVARCHAR(MAX)",
+          "is_nullable": "YES",
+          "description": "Comment from last NPS survey"
+        },
+        {
+          "column_name": "last_nps_survey_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date of last NPS survey"
+        },
+        {
+          "column_name": "last_nps_survey_rating",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Rating from last NPS survey"
+        },
+        {
+          "column_name": "last_engagement_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Last engagement timestamp"
+        },
+        {
+          "column_name": "last_sequence_enrolled",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Name of last sequence contact was enrolled in"
+        },
+        {
+          "column_name": "last_sequence_enrolled_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date when contact was last enrolled in a sequence"
+        },
+        {
+          "column_name": "last_sequence_ended_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date when last sequence ended"
+        },
+        {
+          "column_name": "latest_time_in_lifecycle_stage",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Most recent lifecycle stage duration or timestamp"
+        },
+        {
+          "column_name": "lead_status",
+          "data_type": "NVARCHAR(50)",
+          "is_nullable": "YES",
+          "description": "Lead status (e.g. new, open, qualified)"
+        },
+        {
+          "column_name": "lead_response_time",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Time taken to respond to lead"
+        },
+        {
+          "column_name": "legal_basis_for_processing_contacts_data",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Legal basis for data processing (GDPR compliance)"
+        },
+        {
+          "column_name": "likelihood_to_close",
+          "data_type": "DECIMAL(5,2)",
+          "is_nullable": "YES",
+          "description": "Probability of contact converting to customer"
+        },
+        {
+          "column_name": "lifecycle_stage",
+          "data_type": "NVARCHAR(50)",
+          "is_nullable": "YES",
+          "description": "HubSpot lifecycle stage (lead, MQL, SQL, customer)"
+        },
+        {
+          "column_name": "linkedin_url",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "LinkedIn profile URL"
+        },
+        {
+          "column_name": "marketing_contact_status",
+          "data_type": "NVARCHAR(50)",
+          "is_nullable": "YES",
+          "description": "Marketing contact classification"
+        },
+        {
+          "column_name": "marketing_contact_status_source_type",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Source type that set marketing status"
+        },
+        {
+          "column_name": "marketing_contact_status_source_name",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Source name that set marketing status"
+        },
+        {
+          "column_name": "marketing_contact_until_next_update",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Time until next marketing contact update"
+        },
+        {
+          "column_name": "medium_of_last_booking_in_meetings_tool",
+          "data_type": "NVARCHAR(50)",
+          "is_nullable": "YES",
+          "description": "Medium used for last meeting booking"
+        },
+        {
+          "column_name": "member_email",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Member or account email"
+        },
+        {
+          "column_name": "merged_contact_ids",
+          "data_type": "JSON",
+          "is_nullable": "YES",
+          "description": "IDs of merged contact records"
+        },
+        {
+          "column_name": "message",
+          "data_type": "NVARCHAR(MAX)",
+          "is_nullable": "YES",
+          "description": "Message text from form or chat submission"
+        },
+        {
+          "column_name": "mobile_phone_number",
+          "data_type": "NVARCHAR(50)",
+          "is_nullable": "YES",
+          "description": "Mobile phone number"
+        },
+        {
+          "column_name": "next_activity_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date of next planned activity"
+        },
+        {
+          "column_name": "number_of_associated_deals",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Count of associated deals"
+        },
+        {
+          "column_name": "number_of_employees",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Number of employees in organization"
+        },
+        {
+          "column_name": "number_of_sales_activities",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Number of sales activities linked to contact"
+        },
+        {
+          "column_name": "number_of_sequences_enrolled",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Number of sequences enrolled in total"
+        },
+        {
+          "column_name": "id",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "NO",
+          "description": "HubSpot contact ID"
+        }
+      ],
+      "column_names": [
+        "annual_revenue",
+        "brands",
+        "buying_role",
+        "campaign_of_last_booking_in_meetings_tool",
+        "city",
+        "close_date",
+        "company_name",
+        "contact_owner",
+        "contact_unworked",
+        "country_region",
+        "country_region_code",
+        "create_date",
+        "created_by_user_id",
+        "cumulative_time_in_lifecycle_stage",
+        "currently_in_sequence",
+        "date_entered_lifecycle_stage",
+        "date_exited_lifecycle_stage",
+        "date_of_last_meeting_booked_in_meetings_tool",
+        "date_of_first_engagement",
+        "days_to_close",
+        "description_of_first_engagement",
+        "email",
+        "email_domain",
+        "employment_role",
+        "employment_seniority",
+        "employment_sub_role",
+        "enriched_email_bounce_detected",
+        "enrichment_opt_out",
+        "enrichment_opt_out_timestamp",
+        "fax_number",
+        "first_deal_created_date",
+        "first_name",
+        "has_been_enriched",
+        "hubspot_score",
+        "id_of_first_engagement",
+        "industry",
+        "job_title",
+        "last_activity_date",
+        "last_contacted",
+        "last_name",
+        "last_modified_date",
+        "last_nps_survey_comment",
+        "last_nps_survey_date",
+        "last_nps_survey_rating",
+        "last_engagement_date",
+        "last_sequence_enrolled",
+        "last_sequence_enrolled_date",
+        "last_sequence_ended_date",
+        "latest_time_in_lifecycle_stage",
+        "lead_status",
+        "lead_response_time",
+        "legal_basis_for_processing_contacts_data",
+        "likelihood_to_close",
+        "lifecycle_stage",
+        "linkedin_url",
+        "marketing_contact_status",
+        "marketing_contact_status_source_type",
+        "marketing_contact_status_source_name",
+        "marketing_contact_until_next_update",
+        "medium_of_last_booking_in_meetings_tool",
+        "member_email",
+        "merged_contact_ids",
+        "message",
+        "mobile_phone_number",
+        "next_activity_date",
+        "number_of_associated_deals",
+        "number_of_employees",
+        "number_of_sales_activities",
+        "number_of_sequences_enrolled",
+        "id"
       ]
-  },
-  "zoho_deals": {
-    "columns": [
-      { "column_name": "id", "data_type": "NVARCHAR(255)", "is_nullable": "NO", "description": "Deal ID" },
-      { "column_name": "name", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Deal name" },
-      { "column_name": "zoho_account_id", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Associated account ID" },
-      { "column_name": "description", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Deal description" },
-      { "column_name": "slug", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Slug" },
-      { "column_name": "category", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Deal category" },
-      { "column_name": "status", "data_type": "NVARCHAR(255)", "is_nullable": "NO", "description": "Deal status" },
-      { "column_name": "priority", "data_type": "NVARCHAR(255)", "is_nullable": "NO", "description": "Priority level" },
-      { "column_name": "start_date", "data_type": "DATE", "is_nullable": "YES", "description": "Start date" },
-      { "column_name": "end_date", "data_type": "DATE", "is_nullable": "YES", "description": "End date" },
-      { "column_name": "currency", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Currency code" },
-      { "column_name": "budget", "data_type": "FLOAT", "is_nullable": "YES", "description": "Budget amount" },
-      { "column_name": "created_by", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Created by user" },
-      { "column_name": "updated_by", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Updated by user" },
-      { "column_name": "created_at", "data_type": "DATETIME", "is_nullable": "YES", "description": "Creation timestamp" },
-      { "column_name": "updated_at", "data_type": "DATETIME", "is_nullable": "YES", "description": "Last update timestamp" },
-      { "column_name": "billing_type", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Billing type" },
-      { "column_name": "amount_billed", "data_type": "FLOAT", "is_nullable": "YES", "description": "Amount billed" },
-      { "column_name": "budget_hours", "data_type": "FLOAT", "is_nullable": "YES", "description": "Budgeted hours" },
-      { "column_name": "owner_id", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Owner ID" },
-      { "column_name": "owner_email", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Owner email" },
-      { "column_name": "last_modified_date", "data_type": "DATETIME", "is_nullable": "YES", "description": "Last modification timestamp" },
-      { "column_name": "stage", "data_type": "VARCHAR(100)", "is_nullable": "YES", "description": "Deal stage" },
-      { "column_name": "last_activity_date", "data_type": "VARCHAR(100)", "is_nullable": "YES", "description": "Last activity date" },
-      { "column_name": "target_revenue", "data_type": "FLOAT", "is_nullable": "YES", "description": "Target revenue" },
-      { "column_name": "expected_revenue", "data_type": "FLOAT", "is_nullable": "YES", "description": "Expected revenue" },
-      { "column_name": "probability", "data_type": "FLOAT", "is_nullable": "YES", "description": "Probability percentage" },
-      { "column_name": "pipeline", "data_type": "VARCHAR(100)", "is_nullable": "YES", "description": "Pipeline name" },
-      { "column_name": "type", "data_type": "VARCHAR(100)", "is_nullable": "YES", "description": "Deal type" },
-      { "column_name": "deal_type", "data_type": "NVARCHAR(255)", "is_nullable": "YES", "description": "Deal type (extended)" }
-    ],
-    "column_names": [
-      "id", "name", "zoho_account_id", "description", "slug", "category",
-      "status", "priority", "start_date", "end_date", "currency", "budget",
-      "created_by", "updated_by", "created_at", "updated_at", "billing_type",
-      "amount_billed", "budget_hours", "owner_id", "owner_email",
-      "last_modified_date", "stage", "last_activity_date", "target_revenue",
-      "expected_revenue", "probability", "pipeline", "type", "deal_type"
-    ],
-    "relationships": [
-        { "column": "id", "references": "project.hubspot_id"},
-        { "column": "zoho_account_id", "references": "zoho_accounts.id"}
+    },
+    "hubspot_deals": {
+      "columns": [
+        {
+          "column_name": "amount",
+          "data_type": "DECIMAL(18,2)",
+          "is_nullable": "YES",
+          "description": "Deal amount in HubSpot’s primary currency"
+        },
+        {
+          "column_name": "amount_in_company_currency",
+          "data_type": "DECIMAL(18,2)",
+          "is_nullable": "YES",
+          "description": "Deal amount converted to company currency"
+        },
+        {
+          "column_name": "annual_contract_value_acv",
+          "data_type": "DECIMAL(18,2)",
+          "is_nullable": "YES",
+          "description": "Annual Contract Value for recurring deals"
+        },
+        {
+          "column_name": "annual_recurring_revenue_arr",
+          "data_type": "DECIMAL(18,2)",
+          "is_nullable": "YES",
+          "description": "Annual Recurring Revenue tied to deal"
+        },
+        {
+          "column_name": "brands",
+          "data_type": "JSON",
+          "is_nullable": "YES",
+          "description": "Brand or product line associated with the deal"
+        },
+        {
+          "column_name": "close_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date when deal was closed"
+        },
+        {
+          "column_name": "closed_lost_reason",
+          "data_type": "NVARCHAR(MAX)",
+          "is_nullable": "YES",
+          "description": "Reason why the deal was lost"
+        },
+        {
+          "column_name": "closed_won_reason",
+          "data_type": "NVARCHAR(MAX)",
+          "is_nullable": "YES",
+          "description": "Reason why the deal was won"
+        },
+        {
+          "column_name": "create_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date when deal record was created"
+        },
+        {
+          "column_name": "created_by_user_id",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "ID of the user who created the deal"
+        },
+        {
+          "column_name": "currency",
+          "data_type": "NVARCHAR(10)",
+          "is_nullable": "YES",
+          "description": "Currency code (e.g., USD, EUR)"
+        },
+        {
+          "column_name": "date_of_last_meeting_booked_in_meetings_tool",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date of the last meeting booked via meetings"
+        },
+        {
+          "column_name": "deal_collaborator",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Name(s) of collaborator(s) on the deal"
+        },
+        {
+          "column_name": "deal_description",
+          "data_type": "NVARCHAR(MAX)",
+          "is_nullable": "YES",
+          "description": "Detailed description of the deal"
+        },
+        {
+          "column_name": "deal_name",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Name or title of the deal"
+        },
+        {
+          "column_name": "deal_owner",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "HubSpot owner responsible for the deal"
+        },
+        {
+          "column_name": "deal_probability",
+          "data_type": "DECIMAL(5,2)",
+          "is_nullable": "YES",
+          "description": "Probability of deal closing successfully"
+        },
+        {
+          "column_name": "deal_score",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Score based on HubSpot’s internal scoring"
+        },
+        {
+          "column_name": "deal_split_added",
+          "data_type": "BIT",
+          "is_nullable": "YES",
+          "description": "Indicates if deal revenue is split among users"
+        },
+        {
+          "column_name": "deal_stage",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "Current stage in the sales pipeline"
+        },
+        {
+          "column_name": "deal_tags",
+          "data_type": "JSON",
+          "is_nullable": "YES",
+          "description": "Custom tags or labels applied to the deal"
+        },
+        {
+          "column_name": "deal_type",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "Type of deal (e.g., New Business, Renewal)"
+        },
+        {
+          "column_name": "exchange_rate",
+          "data_type": "DECIMAL(18,6)",
+          "is_nullable": "YES",
+          "description": "Currency exchange rate at deal creation"
+        },
+        {
+          "column_name": "forecast_amount",
+          "data_type": "DECIMAL(18,2)",
+          "is_nullable": "YES",
+          "description": "Forecasted deal amount based on stage/probability"
+        },
+        {
+          "column_name": "forecast_category",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "Forecast category (e.g., Commit, Best Case)"
+        },
+        {
+          "column_name": "forecast_probability",
+          "data_type": "DECIMAL(5,2)",
+          "is_nullable": "YES",
+          "description": "Forecasted probability value"
+        },
+        {
+          "column_name": "hubspot_team",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Team associated with the deal"
+        },
+        {
+          "column_name": "last_activity_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date of last logged activity"
+        },
+        {
+          "column_name": "last_contacted",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date deal’s contact was last contacted"
+        },
+        {
+          "column_name": "last_modified_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Last modification timestamp of the deal record"
+        },
+        {
+          "column_name": "merged_deal_ids",
+          "data_type": "JSON",
+          "is_nullable": "YES",
+          "description": "IDs of deals merged into this record"
+        },
+        {
+          "column_name": "monthly_recurring_revenue_mrr",
+          "data_type": "DECIMAL(18,2)",
+          "is_nullable": "YES",
+          "description": "Monthly Recurring Revenue linked to the deal"
+        },
+        {
+          "column_name": "next_activity_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date of next planned activity"
+        },
+        {
+          "column_name": "next_meeting_id",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "ID of next scheduled meeting"
+        },
+        {
+          "column_name": "next_meeting_name",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Name or title of next meeting"
+        },
+        {
+          "column_name": "next_meeting_start_time",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Start time of next scheduled meeting"
+        },
+        {
+          "column_name": "next_step",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Next planned step or action in the deal process"
+        },
+        {
+          "column_name": "number_of_associated_contacts",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Count of contacts linked to this deal"
+        },
+        {
+          "column_name": "number_of_sales_activities",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Number of related sales activities"
+        },
+        {
+          "column_name": "number_of_times_contacted",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "Number of times associated contact was contacted"
+        },
+        {
+          "column_name": "owner_assigned_date",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Date the deal owner was assigned"
+        },
+        {
+          "column_name": "pipeline",
+          "data_type": "NVARCHAR(100)",
+          "is_nullable": "YES",
+          "description": "Name of sales pipeline the deal belongs to"
+        },
+        {
+          "column_name": "priority",
+          "data_type": "NVARCHAR(50)",
+          "is_nullable": "YES",
+          "description": "Deal priority (e.g., High, Medium, Low)"
+        },
+        {
+          "column_name": "record_id",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "System record ID"
+        },
+        {
+          "column_name": "record_source",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Source system or origin of deal record"
+        },
+        {
+          "column_name": "record_source_detail_1",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Additional record source detail 1"
+        },
+        {
+          "column_name": "record_source_detail_2",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Additional record source detail 2"
+        },
+        {
+          "column_name": "record_source_detail_3",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Additional record source detail 3"
+        },
+        {
+          "column_name": "shared_teams",
+          "data_type": "JSON",
+          "is_nullable": "YES",
+          "description": "Teams with shared access to this deal"
+        },
+        {
+          "column_name": "shared_users",
+          "data_type": "JSON",
+          "is_nullable": "YES",
+          "description": "Users with shared access to this deal"
+        },
+        {
+          "column_name": "total_contract_value_tcv",
+          "data_type": "DECIMAL(18,2)",
+          "is_nullable": "YES",
+          "description": "Total Contract Value for the deal"
+        },
+        {
+          "column_name": "updated_by_user_id",
+          "data_type": "INT",
+          "is_nullable": "YES",
+          "description": "ID of the user who last updated the deal"
+        },
+        {
+          "column_name": "weighted_amount",
+          "data_type": "DECIMAL(18,2)",
+          "is_nullable": "YES",
+          "description": "Weighted deal amount (amount × probability)"
+        },
+        {
+          "column_name": "latest_traffic_source",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Latest traffic source leading to deal"
+        },
+        {
+          "column_name": "latest_traffic_source_drill_down_1",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Detailed traffic source info 1"
+        },
+        {
+          "column_name": "latest_traffic_source_drill_down_2",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Detailed traffic source info 2"
+        },
+        {
+          "column_name": "id",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "NO",
+          "description": "HubSpot deal unique identifier"
+        },
+        {
+          "column_name": "updated_at",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Timestamp of last update"
+        }
+      ],
+      "column_names": [
+        "amount",
+        "amount_in_company_currency",
+        "annual_contract_value_acv",
+        "annual_recurring_revenue_arr",
+        "brands",
+        "close_date",
+        "closed_lost_reason",
+        "closed_won_reason",
+        "create_date",
+        "created_by_user_id",
+        "currency",
+        "date_of_last_meeting_booked_in_meetings_tool",
+        "deal_collaborator",
+        "deal_description",
+        "deal_name",
+        "deal_owner",
+        "deal_probability",
+        "deal_score",
+        "deal_split_added",
+        "deal_stage",
+        "deal_tags",
+        "deal_type",
+        "exchange_rate",
+        "forecast_amount",
+        "forecast_category",
+        "forecast_probability",
+        "hubspot_team",
+        "last_activity_date",
+        "last_contacted",
+        "last_modified_date",
+        "merged_deal_ids",
+        "monthly_recurring_revenue_mrr",
+        "next_activity_date",
+        "next_meeting_id",
+        "next_meeting_name",
+        "next_meeting_start_time",
+        "next_step",
+        "number_of_associated_contacts",
+        "number_of_sales_activities",
+        "number_of_times_contacted",
+        "owner_assigned_date",
+        "pipeline",
+        "priority",
+        "record_id",
+        "record_source",
+        "record_source_detail_1",
+        "record_source_detail_2",
+        "record_source_detail_3",
+        "shared_teams",
+        "shared_users",
+        "total_contract_value_tcv",
+        "updated_by_user_id",
+        "weighted_amount",
+        "latest_traffic_source",
+        "latest_traffic_source_drill_down_1",
+        "latest_traffic_source_drill_down_2",
+        "id",
+        "updated_at"
       ]
-  },
+    },
     "user_role": {
       "columns": [
         {
@@ -1259,6 +2714,36 @@
         { "column": "user_id", "references": "user.id" },
         { "column": "role_id", "references": "role.id" }
       ]
+    }
+    ,
+    "project_role": {
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "INT",
+          "is_nullable": "NO",
+          "description": "Unique identifier for the project role"
+        },
+        {
+          "column_name": "name",
+          "data_type": "NVARCHAR(255)",
+          "is_nullable": "YES",
+          "description": "Name of the role (e.g., Developer, PM)"
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Record creation timestamp"
+        },
+        {
+          "column_name": "updated_at",
+          "data_type": "DATETIME2",
+          "is_nullable": "YES",
+          "description": "Record last-updated timestamp"
+        }
+      ],
+      "column_names": ["id", "name", "created_at", "updated_at"]
     }
   }
 }
