@@ -7,6 +7,7 @@ class GraphState(TypedDict):
     
     # User input
     user_query: str
+    user_email: str
     
     # Intent understanding
     intent: Optional[str]
@@ -18,6 +19,12 @@ class GraphState(TypedDict):
     
     # SQL generation
     generated_sql: Optional[str]
+    
+    # User authorization (NEW)
+    user_id: Optional[str]
+    is_admin: bool
+    accessible_project_ids: List[str]
+    original_sql: Optional[str]  # SQL before filtering
     
     # Validation
     is_valid: bool
