@@ -5,6 +5,7 @@ from graph.state import GraphState
 from agents.nlu_agent import nlu_agent
 from agents.schema_agent import schema_agent
 from agents.text2sql_agent import text2sql_agent
+from agents.sql_filter_agent import sql_filter_agent
 from agents.validator_agent import validator_agent
 from agents.executor_agent import executor_agent
 from agents.formatter_agent import formatter_agent
@@ -22,6 +23,7 @@ def create_workflow() -> StateGraph:
     workflow.add_node("nlu", nlu_agent.analyze_intent)
     workflow.add_node("schema", schema_agent.get_relevant_schema)
     workflow.add_node("text2sql", text2sql_agent.generate_sql)
+    workflow.add_node("sql_filter", sql_filter_agent.apply_user_filters)
     workflow.add_node("validator", validator_agent.validate_sql)
     workflow.add_node("executor", executor_agent.execute_sql)
     workflow.add_node("formatter", formatter_agent.format_results)
@@ -29,7 +31,8 @@ def create_workflow() -> StateGraph:
     # Define edges
     workflow.add_edge("nlu", "schema")
     workflow.add_edge("schema", "text2sql")
-    workflow.add_edge("text2sql", "validator")
+    workflow.add_edge("text2sql", "sql_filter")
+    workflow.add_edge("sql_filter", "validator")
     
     # Conditional edge from validator
     def should_execute(state: GraphState) -> Literal["executor", "end"]:
