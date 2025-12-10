@@ -13,19 +13,19 @@ class Settings:
     """Application settings."""
     
     # Gemini Configuration
-    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
-    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-2.5-pro")
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY")
+    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL")
     
     # Database Configuration (pymssql format)
-    DB_SERVER: str = os.getenv("DB_SERVER", "trimstone-dev.database.windows.net")
-    DB_DATABASE: str = os.getenv("DB_DATABASE", "trimstone")
-    DB_USERNAME: str = os.getenv("DB_USERNAME", "trimstone")
-    DB_PASSWORD: str = os.getenv("DB_PASSWORD", "")
-    DB_ENCRYPT: bool = os.getenv("DB_ENCRYPT", "true").lower() == "true"
+    DB_SERVER: str = os.getenv("DB_SERVER")
+    DB_DATABASE: str = os.getenv("DB_DATABASE")
+    DB_USERNAME: str = os.getenv("DB_USERNAME")
+    DB_PASSWORD: str = os.getenv("DB_PASSWORD")
+    DB_ENCRYPT: bool = os.getenv("DB_ENCRYPT").lower() == "true"
     
     # Application Settings
-    LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
-    CACHE_TTL: int = int(os.getenv("CACHE_TTL", "3600"))
+    LOG_LEVEL: str = os.getenv("LOG_LEVEL")
+    CACHE_TTL: int = int(os.getenv("CACHE_TTL"))
     
     # Project Root
     PROJECT_ROOT: Path = PROJECT_ROOT_COMPUTED
