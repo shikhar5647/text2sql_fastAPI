@@ -23,7 +23,9 @@ class DatabaseConnection:
                 database=settings.DB_DATABASE,
                 # as_dict=True,  <--- THIS LINE IS REMOVED (OR COMMENTED OUT)
                 tds_version='7.4',
-                autocommit=True
+                autocommit=True,
+                timeout=30,
+                login_timeout=15
             )
             logger.info("Database connection established successfully")
             return self._connection
